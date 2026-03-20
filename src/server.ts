@@ -1,9 +1,9 @@
 import "dotenv/config";
-import app from "./app.ts";
+import app from "src/app";
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, (error) => {
+app.listen(PORT, (error: any) => {
   if (!error) {
     console.log(`Server running on port ${PORT}`);
   } else {

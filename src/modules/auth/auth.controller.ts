@@ -16,7 +16,7 @@ const cookieOptions = {
   secure: process.env.NODE_ENV === "production",
   sameSite: "strict" as const,
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  path: "/api/auth/refresh",
+  path: "/",
 };
 
 export const register = async (req: Request, res: Response) => {
@@ -60,9 +60,7 @@ export const logout = async (req: Request, res: Response) => {
   if (refreshToken) {
     await logoutService(decoded.id);
   }
-  res.clearCookie("refreshToken", {
-    path: "/api/auth/refresh",
-  });
+  res.clearCookie("refreshToken");
 
   return sendSuccess(res, "Logout successful", null);
 };

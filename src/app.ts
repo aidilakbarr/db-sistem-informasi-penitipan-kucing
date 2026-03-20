@@ -7,6 +7,7 @@ import rateLimit from "express-rate-limit";
 import morgan from "morgan";
 import { errorHandler } from "./middlewares/error.middleware";
 import authRoutes from "./modules/auth/auth.route";
+import catRoutes from "./modules/cat/cat.route";
 
 const app = express();
 
@@ -32,7 +33,7 @@ app.use(
 // app.use(morgan("combined"));
 
 app.use("/api/auth", authRoutes);
+app.use("/api", catRoutes);
 
 app.use(errorHandler);
-
 export default app;

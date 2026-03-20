@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,12 +6,34 @@ datasource db {
   provider = "postgresql"
 }
 
+// --- ENUMS ---
+
 enum Role {
   ADMIN
   CARETAKER
   COURIER
   CUSTOMER
 }
+
+enum CatRas {
+  persia
+  siamase
+  scottish_fold     @map("scottish fold")
+  maine_coon        @map("maine coon")
+  anggora
+  bengal
+  siberian
+  sphynx
+  russian_blue      @map("russian blue")
+  british_shorthair @map("british shorthair")
+}
+
+enum VaccinationStatus {
+  vaccinated
+  not_vaccinated @map("not vaccinated")
+}
+
+// --- MODELS ---
 
 model User {
   id               String   @id @default(uuid())
@@ -32,5 +48,25 @@ model User {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
+  cats             Cat[]    
+
   @@index([email])
+}
+
+model Cat {
+  id                    String            @id @default(uuid())
+  name                  String
+  ras                   CatRas
+  age                   Int
+  weight                Float
+  medicalHistory        String            @db.Text
+  vaccinationStatus     VaccinationStatus
+  vaccineExpirationDate DateTime?
+  specialNote           String?           @db.VarChar(200)
+
+  ownerId               String
+  owner                 User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
 }
