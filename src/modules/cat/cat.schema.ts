@@ -50,3 +50,16 @@ export const catSchema = z
       path: ["vaccineExpirationDate"],
     },
   );
+
+export const updateCatSchema = z.object({
+  params: z.object({
+    catId: z.string().min(1, "ID tidak boleh kosong"),
+  }),
+  body: catSchema,
+});
+
+export const deleteCatSchema = z.object({
+  params: z.object({
+    catId: z.string().min(1, "ID tidak boleh kosong"),
+  }),
+});

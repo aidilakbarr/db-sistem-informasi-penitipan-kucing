@@ -33,6 +33,25 @@ enum VaccinationStatus {
   not_vaccinated @map("not vaccinated")
 }
 
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_CARE
+  COMPLETED
+  CANCELLED
+}
+
+enum ServiceType {
+  BASIC
+  PREMIUM
+  DELUXE
+}
+
+enum AdditionalServices {
+  GROOMING
+  DELIVERY
+}
+
 // --- MODELS ---
 
 model User {
@@ -48,7 +67,8 @@ model User {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  cats             Cat[]    
+  cats             Cat[]  
+  booking          Booking[]  
 
   @@index([email])
 }
@@ -67,6 +87,31 @@ model Cat {
   ownerId               String
   owner                 User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
+  booking               Booking[]
+
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
+}
+
+model Booking {
+  id                String         @id @default(uuid())
+  checkInDate       DateTime
+  checkOutDate      DateTime
+  serviceType       ServiceType    @default(BASIC)
+  additionalServices   AdditionalServices?      
+  specialNote       String?        @db.Text
+  status            BookingStatus  @default(PENDING)
+  totalPrice        Float          @default(0)
+
+  // Relasi
+  catId             String
+  cat               Cat            @relation(fields: [catId], references: [id], onDelete: Cascade)
+  userId            String
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([catId])
 }

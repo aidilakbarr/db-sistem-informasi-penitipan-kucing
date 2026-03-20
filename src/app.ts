@@ -8,6 +8,7 @@ import morgan from "morgan";
 import { errorHandler } from "./middlewares/error.middleware";
 import authRoutes from "./modules/auth/auth.route";
 import catRoutes from "./modules/cat/cat.route";
+import bookingRoutes from "./modules/booking/booking.route";
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use(
 
 app.use("/api/auth", authRoutes);
 app.use("/api", catRoutes);
+app.use("/api", bookingRoutes);
 
 app.use(errorHandler);
 export default app;
