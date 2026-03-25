@@ -52,6 +52,24 @@ enum AdditionalServices {
   DELIVERY
 }
 
+enum CageStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+}
+
+enum PaymentMethod {
+  COD
+  TRANSFER
+  PAYMENT_GATEWAY
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
 // --- MODELS ---
 
 model User {
@@ -94,24 +112,71 @@ model Cat {
 }
 
 model Booking {
-  id                String         @id @default(uuid())
-  checkInDate       DateTime
-  checkOutDate      DateTime
-  serviceType       ServiceType    @default(BASIC)
-  additionalServices   AdditionalServices?      
-  specialNote       String?        @db.Text
-  status            BookingStatus  @default(PENDING)
-  totalPrice        Float          @default(0)
+  id                 String              @id @default(uuid())
+  checkInDate        DateTime
+  checkOutDate       DateTime
+  serviceType        ServiceType         @default(BASIC)
+  additionalServices AdditionalServices?
+  specialNote        String?             @db.Text
+  status             BookingStatus       @default(PENDING)
+  totalPrice         Float               @default(0)
 
-  // Relasi
-  catId             String
-  cat               Cat            @relation(fields: [catId], references: [id], onDelete: Cascade)
-  userId            String
-  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catId              String
+  cat                Cat                 @relation(fields: [catId], references: [id], onDelete: Cascade)
+  userId             String
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cageId             String?
+  cage               Cage?               @relation(fields: [cageId], references: [id]) 
 
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  payment            Payment?   
+   
+  dailyLogs DailyLog[]        
+
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 
   @@index([userId])
   @@index([catId])
+}
+
+model Cage {
+  id          String      @id @default(uuid())
+  cageNumber  String      @unique
+  type        ServiceType @default(BASIC) 
+  status      CageStatus  @default(AVAILABLE)
+  description String?     @db.Text
+  
+  currentBookingId String?   @unique
+  booking          Booking[]
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Payment {
+  id             String        @id @default(uuid())
+  amount         Float         
+  method         PaymentMethod @default(TRANSFER)
+  status         PaymentStatus @default(PENDING)
+  proofOfPayment String?       
+  adminNote      String?       @db.Text 
+
+  bookingId      String        @unique
+  booking        Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model DailyLog {
+  id        String   @id @default(uuid())
+  date      DateTime @default(now())
+  condition String
+  activity  String
+  note      String?  @db.Text
+
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }

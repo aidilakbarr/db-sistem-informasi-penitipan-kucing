@@ -9,6 +9,7 @@ import { errorHandler } from "./middlewares/error.middleware";
 import authRoutes from "./modules/auth/auth.route";
 import catRoutes from "./modules/cat/cat.route";
 import bookingRoutes from "./modules/booking/booking.route";
+import cageRoutes from "./modules/cage/cage.route";
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api", catRoutes);
 app.use("/api", bookingRoutes);
+app.use("/api", cageRoutes);
 
 app.use(errorHandler);
 export default app;

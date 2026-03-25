@@ -9,14 +9,17 @@ export const createCat = async (data: CatDTO, ownerId: string) => {
     ownerId,
   );
   if (isCatExist) {
-    throw new Error("Cat with the same name already exists for this owner");
+    throw new AppError(
+      "Cat with the same name already exists for this owner",
+      HTTP_STATUS.BAD_REQUEST,
+    );
   }
 
   const cat = await catRepository.createCat({ ...data }, ownerId);
   return {
     id: cat.id,
     name: cat.name,
-    breed: cat.breed,
+    breed: cat.ras,
   };
 };
 
@@ -36,7 +39,7 @@ export const putCat = async (id: string, data: CatDTO, ownerId: string) => {
   return {
     id: updatedCat.id,
     name: updatedCat.name,
-    breed: updatedCat.breed,
+    breed: updatedCat.ras,
   };
 };
 

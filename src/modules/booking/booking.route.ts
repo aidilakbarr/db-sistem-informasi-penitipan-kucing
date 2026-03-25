@@ -9,5 +9,15 @@ router.use(authMiddleware);
 
 router.post("/bookings", asyncHandler(bookingController.create));
 router.get("/bookings", asyncHandler(bookingController.list));
+router.put("/bookings/:id/check-in", asyncHandler(bookingController.checkIn));
+router.put("/bookings/:id/check-out", asyncHandler(bookingController.checkOut));
+router.post(
+  "/bookings/:id/daily-update",
+  asyncHandler(bookingController.updateMonitoring),
+);
+router.get(
+  "/bookings/:id/history",
+  asyncHandler(bookingController.getHistoryBooking),
+);
 
 export default router;

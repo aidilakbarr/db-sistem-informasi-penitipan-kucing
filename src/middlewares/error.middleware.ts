@@ -31,7 +31,7 @@ export const errorHandler = (
       case "P2002":
         return res.status(409).json({
           success: false,
-          message: "Email already regisddtered",
+          message: "Unique constraint failed",
         });
 
       case "P2025":
